@@ -12,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class DemoQATests {
@@ -34,6 +35,7 @@ public class DemoQATests {
             driver.get("https://demoqa.com/automation-practice-form");
             driver.manage().window().maximize();
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        }
     }
 
     @Test
@@ -42,15 +44,12 @@ public class DemoQATests {
 
         WebElement firstNameInput = driver.findElement(By.id("firstName"));
         firstNameInput.sendKeys("Elena");
-        Assertions.assertEquals("Elena", driver.findElement(By.id("firstName")).getAttribute("value"), "Корректное значение в поле 'Имя'");
-        
+
         WebElement lastNameInput = driver.findElement(By.id("lastName"));
         lastNameInput.sendKeys("Zaytseva");
-        Assertions.assertEquals("Zaytseva", driver.findElement(By.id("lastName")).getAttribute("value"), "Корректное значение в поле 'Фамилия'");
 
         WebElement emailInput = driver.findElement(By.id("userEmail"));
         emailInput.sendKeys("elena@example.com");
-        Assertions.assertEquals("elena@example.com", driver.findElement(By.id("userEmail")).getAttribute("value"), "Корректное значение в поле 'Email'");
 
         WebElement genderSelect = driver.findElement(By.xpath("//*[@id='gender-radio-2']"));
         genderSelect.isSelected();
@@ -78,6 +77,10 @@ public class DemoQATests {
         WebElement hobbiesCheckbox = driver.findElement(By.id("hobbies-checkbox-2"));
         hobbiesCheckbox.click();
 
+        File picture = new File("src/test/java/ru/academits/HW/picture.jpg");
+        WebElement uploadInput = driver.findElement(By.id("uploadPicture"));
+        uploadInput.sendKeys(picture.getAbsolutePath());
+
         WebElement addressInput = driver.findElement(By.id("currentAddress"));
         addressInput.sendKeys("123, Street, City");
 
@@ -87,10 +90,14 @@ public class DemoQATests {
 
         WebElement cityDropdown = driver.findElement(By.xpath("//div[@id='stateCity-wrapper']/div[3]"));
         cityDropdown.isEnabled();
-        
+
         WebElement submitButton = driver.findElement(By.id("submit"));
         submitButton.click();
         Thread.sleep(3000);
+
+        Assertions.assertEquals("Elena", driver.findElement(By.id("firstName")).getAttribute("value"), "Корректное значение в поле 'Имя'");
+        Assertions.assertEquals("Zaytseva", driver.findElement(By.id("lastName")).getAttribute("value"), "Корректное значение в поле 'Фамилия'");
+        Assertions.assertEquals("elena@example.com", driver.findElement(By.id("userEmail")).getAttribute("value"), "Корректное значение в поле 'Email'");
     }
 
     @AfterEach
