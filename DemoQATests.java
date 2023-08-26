@@ -1,6 +1,8 @@
 package ru.academits.HW;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.assertj.core.api.Java6StandardSoftAssertionsProvider;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,11 +97,55 @@ public class DemoQATests {
         submitButton.click();
         Thread.sleep(3000);
 
-        Assertions.assertEquals("Elena", driver.findElement(By.id("firstName")).getAttribute("value"), "Корректное значение в поле 'Имя'");
-        Assertions.assertEquals("Zaytseva", driver.findElement(By.id("lastName")).getAttribute("value"), "Корректное значение в поле 'Фамилия'");
-        Assertions.assertEquals("elena@example.com", driver.findElement(By.id("userEmail")).getAttribute("value"), "Корректное значение в поле 'Email'");
-    }
+        SoftAssertions softAssert = new SoftAssertions();
 
+        softAssert.assertThat(driver.findElement(By.id("firstName")).getAttribute("value"))
+                .isEqualTo("Elena");
+
+        softAssert.assertThat(driver.findElement(By.id("lastName")).getAttribute("value"))
+                .isEqualTo("Zaytseva");
+
+        softAssert.assertThat(driver.findElement(By.id("userEmail")).getAttribute("value"))
+                .isEqualTo("elena@example.com");
+
+        softAssert.assertThat(driver.findElement(By.xpath("//*[@id='gender-radio-2']"))
+                .getAttribute("value")).isEqualTo("elena@example.com");
+
+        softAssert.assertThat(driver.findElement(By.id("gender-radio-2")).isSelected())
+                .as("Select gender").isTrue();
+
+        softAssert.assertThat(driver.findElement(By.cssSelector("input[id='userNumber']"))
+                .getAttribute("value")).isEqualTo("1234567890");
+
+        softAssert.assertThat(driver.findElement(By.xpath("//select[@class='react-datepicker__month-select']"))
+                .getText()).isEqualTo("April");
+
+        softAssert.assertThat(driver.findElement(By.xpath("//select[@class='react-datepicker__year-select']"))
+                .getText()).isEqualTo("1990");
+
+        softAssert.assertThat(driver.findElement(By.xpath("//div[@class='react-datepicker__month']/div[1]/div[1]"))
+                .isSelected());
+
+        softAssert.assertThat(driver.findElement(By.id("subjectsInput")).getAttribute("value"))
+                .isEqualTo("Economics, English");
+
+        softAssert.assertThat(driver.findElement(By.id("hobbies-checkbox-2")).isSelected());
+
+        softAssert.assertThat(driver.findElement(By.id("uploadPicture")).getAttribute("value")).endsWith("picture.jpg");
+
+        softAssert.assertThat(driver.findElement(By.id("currentAddress")).getAttribute("value"))
+                .isEqualTo("123, Street, City");
+
+        softAssert.assertThat(driver.findElement(By.xpath("//div[contains(text(), 'NCR')]"))
+                .isDisplayed()).as("The 'State' field should be visible").isTrue();
+
+        softAssert.assertThat(driver.findElement(By.xpath("//div[@id='stateCity-wrapper']/div[3]"))
+                .isEnabled()).as("The 'City' field should be active").isTrue();
+
+        softAssert.assertThat(driver.findElement(By.id("submit")).isDisplayed());
+
+        softAssert.assertAll();
+    }
     @AfterEach
     public void tearDown() {
         if (driver != null) {
